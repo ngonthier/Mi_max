@@ -1,0 +1,12 @@
+# Folders
+__pycache__/*
+data/*
+model/*
+output/*
+
+# Data
+*.tfrecords
+*.jpg
+*.jpeg
+*.png
+*.pkl
