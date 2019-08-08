@@ -9,7 +9,7 @@ By [Gonhier Nicolas](https://perso.telecom-paristech.fr/gonthier/), [Gousseau Ya
 ### Installation
 1. Clone the repository
   ```Shell
-  git clone ?
+  git clone git@github.com:nicaogr/Mi_max.git
   ```
 
 2. You need to install all the required python library such as tensorflow, cython, opencv-python and easydict. 
@@ -59,6 +59,20 @@ Here the matching between the network and training set and the ckpt weights file
     res101_VOC12  : res101_faster_rcnn_iter_110000.ckpt  
     res101_COCO  : res101_faster_rcnn_iter_1190000.ckpt  
     res152_COCO  : res152_faster_rcnn_iter_1190000.ckpt 
+
+### You may need to download the images datasets : (even if the 
+
+You have to unzip the dataset in the data folder.
+
+ - [IconArt](https://wsoda.telecom-paristech.fr/downloads/dataset/IconArt_v1.zip)
+ - [PeopleArt](https://codeload.github.com/BathVisArtData/PeopleArt/zip/master) with the [image level labels](https://wsoda.telecom-paristech.fr/downloads/dataset/PeopleArt.csv)
+ - [Watercolor2k](http://www.hal.t.u-tokyo.ac.jp/~inoue/projects/cross_domain_detection/datasets/watercolor.zip)  with the [image level labels](https://wsoda.telecom-paristech.fr/downloads/dataset/watercolor.csv)
+
+### Description of the pipeline :
+
+We will first download the required dataset, compute the features and boxes from a Faster RCNN (recorded in a tfrecords file) and then train a MI_max model before runnning the detection evaluation. 
+
+You can add your own dataset, it only required to be in the PASCAL VOC format.
 
 ### To run the experiment from our research paper :
 For the MI_max model :
