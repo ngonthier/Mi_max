@@ -14,7 +14,7 @@ By [Gonhier Nicolas](https://perso.telecom-paristech.fr/gonthier/), [Gousseau Ya
 
 2. You need to install all the required python library such as tensorflow, cython, opencv-python, numpy, cython_bbox and easydict. We advice you to create a [conda environnement](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) or equivalent.
 
-You can use the requirements.txt file and the install [cython_bbox](https://pypi.org/project/cython-bbox/) :
+You can use the requirements.txt file and then install [cython_bbox](https://pypi.org/project/cython-bbox/) :
   ```Shell
   pip install -r requirements.txt
   pip install cython_bbox
@@ -24,6 +24,8 @@ If you don't have the admin right try :
   pip install --user -r requirements.txt
   pip install --user cython_bbox
   ```
+In the requirements file, we install the GPU version of Tensorflow.
+  
 3. Update your -arch in setup script to match your GPU for the faster RCNN code. This code is a modify version of the [Xinlei Chen](https://github.com/endernewton) [implementation](https://github.com/endernewton/tf-faster-rcnn).
   ```Shell
   cd tf_faster_rcnn/lib
@@ -42,17 +44,18 @@ If you don't have the admin right try :
   **Note**: You are welcome to contribute the settings on your end if you have made the code work properly on other GPUs. Also even if you are only using CPU tensorflow, GPU based code (for NMS) will be used by default, so please set **USE_GPU_NMS False** to get the correct output.
 
 4. Build the Cython modules
+If it is not already the case move to the lib folder.
   ```Shell
-  cd tf_faster_rcnn
+  cd tf_faster_rcnn/lib 
   make clean
   make
-  cd ../
+  cd ../../
   ```
 
 This code have been tested on Ubuntu 18.04 and 16.04 with python 3.6 and Tensorflow 1.8 .
 
 ### Download the pre-trained models
-You cannot download the pre-trained models through the link and saved same to the model folder :
+You have to download the pre-trained models through the link below and saved them to the model folder after decompressed it :
   - Google drive [here](https://drive.google.com/open?id=0B1_fAEgxdnvJSmF3YUlZcHFqWTQ).
   
 Here the matching between the network and training set and the ckpt weights file name : 
