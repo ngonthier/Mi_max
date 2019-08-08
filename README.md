@@ -12,7 +12,7 @@ By [Gonhier Nicolas](https://perso.telecom-paristech.fr/gonthier/), [Gousseau Ya
   git clone git@github.com:nicaogr/Mi_max.git
   ```
 
-2. You need to install all the required python library such as tensorflow, cython, opencv-python and easydict. 
+2. You need to install all the required python library such as tensorflow, cython, opencv-python and easydict. We advice you to create a [conda environnement](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) or equivalent.
 
 You can use the requirements.txt file :
   ```Shell
@@ -46,6 +46,8 @@ If you don't have the admin right try :
   make
   cd ../
   ```
+
+This code have been tested on Ubuntu 18.04 and 16.04 with python 3.6 .
 
 ### Download the pre-trained models
 You cannot download the pre-trained models through the link and saved same to the model folder :
