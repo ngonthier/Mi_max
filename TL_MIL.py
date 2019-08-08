@@ -541,7 +541,7 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
     print("mean Average Precision Classification for all the data = {0:.3f}".format(np.mean(AP_per_class)))    
     print("mean Precision Classification for all the data = {0:.3f}".format(np.mean(P_per_class)))  
     print("mean Recall Classification for all the data = {0:.3f}".format(np.mean(R_per_class)))  
-    #print("mean Precision Classification @ 20 for all the data = {0:.3f}".format(np.mean(P20_per_class)))  
+    print("mean Precision Classification @ 20 for all the data = {0:.3f}".format(np.mean(P20_per_class)))  
     print('Mean Average Precision Classification with MI_Max with score =',with_scores,' : ')
     print(AP_per_class)
     print(arrayToLatex(AP_per_class,per=True))

@@ -83,7 +83,8 @@ if __name__ == '__main__':
     print('Called with args:')
     print(args)
     # This function return the AP for the detection task with IoU > 0.5, IuO > 0.1 and for the classification task
-    apsAt05,apsAt01,AP_classif = run_and_eval_MImax(demonet = args.net,database = args.dataset,ReDo = False,PlotRegions=args.PlotRegions,
+    apsAt05,apsAt01,AP_classif = run_and_eval_MImax(demonet = args.net,database = args.dataset,
+                                  ReDo = True,PlotRegions=args.PlotRegions,
                                   verbose = args.verbose,k_per_bag=args.k_per_bag,
                                   CV_Mode=args.CV_Mode,num_split=args.num_split,
                                   restarts=args.restarts,max_iters_all_base=args.max_iters_all_base,

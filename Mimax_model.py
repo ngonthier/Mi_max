@@ -47,7 +47,7 @@ class tf_MI_max():
                  buffer_size=10000,num_features=2048,
                   num_rois=300,num_classes=10,loss_type='',
                   is_betweenMinus1and1=False,CV_Mode=None,num_split=2,with_scores=False,
-                  epsilon=0.0,usecache=True): 
+                  epsilon=0.0,usecache=True,normalizeW=False): 
         """
         @param LR : Learning rate : pas de gradient de descente [default: 0.01]
         @param C : the loss/regularization tradeoff constant [default: 1.0]
@@ -85,6 +85,7 @@ class tf_MI_max():
         @param num_split : default 2 : the number of split/fold used in the cross validation method
         @param with_scores : default False : Multiply the scalar product before the max by the objectness score from the FasterRCNN
         @param epsilon : default 0. : The term we add to the object score
+        @param normalizeW : normalize the W vectors before optimization
         """
         self.LR = LR
         self.C = C
@@ -100,7 +101,7 @@ class tf_MI_max():
         self.num_classes = num_classes
         self.is_betweenMinus1and1 = is_betweenMinus1and1
         self.np_pos_value = 1
-        self.np_neg_value = 1 # Ces elements peuvent etre des matrices ou des vecteurs selon les cas
+        self.np_neg_value = 1 # Those elements will be replace by matrix if the dataset contains several classes
         self.CV_Mode = CV_Mode
         if not(CV_Mode is None):
             if not(CV_Mode in ['CV','']):
@@ -114,8 +115,9 @@ class tf_MI_max():
         self.epsilon = epsilon# Used to avoid having a zero score
         self.Cbest =None
         # case of Cvalue
-        self.C_values =  np.arange(0.5,2.75,0.25,dtype=np.float32) # Case used in VISART2018
+        self.C_values =  np.arange(0.5,1.5,0.1,dtype=np.float32) # Case used in VISART2018
         self.usecache = usecache
+        self.normalizeW = normalizeW
         
     def parser(self,record):
 
@@ -457,6 +459,8 @@ class tf_MI_max():
 
         sess.run(init_op)
         sess.run(shuffle_iterator.initializer)
+        if self.normalizeW:
+            sess.run(normalize_W) # Normalize the W vector
         
         if self.Optimizer in ['GradientDescent','Momentum','Adam']:
             for step in range(self.max_iters):
