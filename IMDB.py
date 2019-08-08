@@ -13,25 +13,30 @@ from zipfile import ZipFile
 from tqdm import tqdm
 
 def download_url(url, destination=None, progress_bar=True):
-	def my_hook(t):
-		last_b = [0]
+    def my_hook(t):
+        last_b = [0]
 
-		def inner(b=1, bsize=1, tsize=None):
-			if tsize is not None:
-				t.total = tsize
-			if b > 0:
-				t.update((b - last_b[0]) * bsize)
-			last_b[0] = b
+        def inner(b=1, bsize=1, tsize=None):
+            if tsize is not None:
+                t.total = tsize
+            if b > 0:
+                t.update((b - last_b[0]) * bsize)
+            last_b[0] = b
 
-		return inner
+        return inner
 
-	if progress_bar:
-		with tqdm(unit='B', unit_scale=True, miniters=1, desc=url.split('/')[-1]) as t:
-			filename, _ = urlretrieve(url, filename=destination, reporthook=my_hook(t))
-	else:
-		filename, _ = urlretrieve(url, filename=destination)
+    if progress_bar:
+        with tqdm(unit='B', unit_scale=True, miniters=1, desc=url.split('/')[-1]) as t:
+            filename, _ = urlretrieve(url, filename=destination, reporthook=my_hook(t))
+    else:
+        filename, _ = urlretrieve(url, filename=destination)
 
 def get_database(database,default_path_imdb = 'data'):
+    """
+    This function download the needed dataset and return some useful information
+    such as the ground truth image level label
+    clipart have not been tested
+    """
 
     if database=='watercolor':
         ext = '.csv'
@@ -75,7 +80,7 @@ def get_database(database,default_path_imdb = 'data'):
     num_classes = len(classes)
     
     path_data_csvfile = os.path.join(path_tmp,'ImageSets','Main')
-    databasetxt = path_data_csvfile + database + ext
+    databasetxt = os.path.join(path_data_csvfile,database + ext)
     
     if not(os.path.exists(path_to_img)):
         tmp_zip = 'sampleDir.zip'
@@ -85,11 +90,21 @@ def get_database(database,default_path_imdb = 'data'):
             # Extract all the contents of zip file in current directory
             zipObj.extractall(default_path_imdb)
         os.remove(tmp_zip)
-        if database in ['PeopleArt','watercolor']:
+    if database in ['watercolor']:
+        if not(os.path.exists(databasetxt)):
             # We also need to download the image level annotations file at the right format
             download_url(url_file, databasetxt)
-    
-    databasetxt = os.path.join(path_data_csvfile,database + ext)
+        
+    if database=='PeopleArt':
+        peopleArtpath = os.path.join(default_path_imdb,'PeopleArt')
+        peopleArtpath_full = os.path.join(default_path_imdb,'PeopleArt','ImageSets','Main')
+        if os.path.exists(os.path.join(default_path_imdb,'PeopleArt-master')):
+            os.rename(os.path.join(default_path_imdb,'PeopleArt-master'),peopleArtpath)
+        if not(os.path.exists(peopleArtpath_full)):
+            os.mkdir(os.path.join(peopleArtpath,'ImageSets'))
+            os.mkdir(os.path.join(peopleArtpath,'ImageSets','Main'))
+            # We also need to download the image level annotations file at the right format
+        download_url(url_file, databasetxt)
 
     if 'IconArt_v1' in database or 'IconArt_v1'==database or database=='RMN':
         dtypes = {0:str,'item':str,'angel':int,\

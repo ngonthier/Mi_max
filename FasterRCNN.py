@@ -203,10 +203,11 @@ def Compute_Faster_RCNN_features(demonet='res152_COCO',nms_thresh = 0.7,database
         anchor_scales = [4, 8, 16, 32] # we  use  3  aspect  ratios  and  4  scales (adding 64**2)
     nbClassesDemoNet = len(CLASSES)
     pathlib.Path(path_to_model).mkdir(parents=True, exist_ok=True) 
+    tfmodelpkl = os.path.join(path_to_model,NETS_Pretrained[demonet].replace('ckpt','pkl'))
     tfmodel = os.path.join(path_to_model,NETS_Pretrained[demonet])
-    if not(os.path.exists(tfmodel)):
-        print("You have to download the Faster RCNN pretrained, see README")
-        return(0)
+    if not(os.path.exists(tfmodelpkl)):
+        print("You have to download the Faster RCNN pretrained, see the README file. The code will failed")
+        raise Exception('Model not found.')
     
     tfconfig = tf.ConfigProto(allow_soft_placement=True)
     tfconfig.gpu_options.allow_growth=True
@@ -240,6 +241,7 @@ def Compute_Faster_RCNN_features(demonet='res152_COCO',nms_thresh = 0.7,database
     else:
         k_per_bag_str = '_k'+str(k_regions)
     dict_writers = {}
+    pathlib.Path(path_output).mkdir(parents=True, exist_ok=True)
     for set_str in sets:
         name_pkl_all_features = os.path.join(path_output,'FasterRCNN_'+ demonet +'_'+database+'_N'+str(N)+extL2+'_TLforMIL_nms_'+str(nms_thresh)+savedstr+k_per_bag_str+'_'+set_str+'.tfrecords')
         dict_writers[set_str] = tf.python_io.TFRecordWriter(name_pkl_all_features)
@@ -250,10 +252,10 @@ def Compute_Faster_RCNN_features(demonet='res152_COCO',nms_thresh = 0.7,database
         if i%Itera==0:
             if verbose : print(i,name_img)
         if database in ['IconArt_v1','watercolor']:
-            complet_name = path_to_img + name_img + '.jpg'
+            complet_name = os.path.join(path_to_img,name_img + '.jpg')
             name_sans_ext = name_img
         elif database=='PeopleArt':
-            complet_name = path_to_img + name_img
+            complet_name = os.path.join(path_to_img, name_img)
             name_sans_ext = os.path.splitext(name_img)[0]
         try:    
             im = cv2.imread(complet_name)

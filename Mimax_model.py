@@ -248,15 +248,12 @@ class tf_MI_max():
         self.C_Searching= C_Searching
 
         if self.C_Searching:
-            if not((self.C_Searching or self.CV_Mode == 'CVforCsearch') and self.WR) :
-                print("!! You should not do that, you will not choose the W vector on the right reason")
             C_values = self.C_values
             self.Cbest = np.zeros((self.num_classes,))
             self.paral_number_W = self.restarts +1
-            if not(self.storeVectors):
-                C_value_repeat = np.repeat(C_values,repeats=(self.paral_number_W*self.num_classes),axis=0)
-                self.paral_number_W *= len(C_values)
-                if self.verbose: print('We will compute :',len(C_value_repeat),'W vectors due to the C searching')
+            C_value_repeat = np.repeat(C_values,repeats=(self.paral_number_W*self.num_classes),axis=0)
+            self.paral_number_W *= len(C_values)
+            if self.verbose: print('We will compute :',len(C_value_repeat),'W vectors due to the C searching')
         else:
             self.paral_number_W = self.restarts +1
         

@@ -255,7 +255,7 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
     item_name,path_to_img,classes,ext,num_classes,str_val,df_label = get_database(database) 
     num_trainval_im = len(df_label[df_label['set']=='train'][item_name]) + len(df_label[df_label['set']==str_val][item_name])
    
-    print('Training on ',database,'with ',num_trainval_im,' images in the trainval set')
+    if verbose: print('Training on ',database,'with ',num_trainval_im,' images in the trainval set')
     N = 1
     extL2 = ''
     nms_thresh = 0.7
@@ -272,10 +272,8 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
     for set_str in sets:
         name_pkl_all_features =  os.path.join(path_output,metamodel+'_'+ demonet +'_'+database+'_N'+str(N)+extL2+'_TLforMIL_nms_'+str(nms_thresh)+savedstr+k_per_bag_str+'_'+set_str+'.tfrecords')
         dict_name_file[set_str] = name_pkl_all_features
-        print(name_pkl_all_features)
         if not(os.path.isfile(name_pkl_all_features)):
             data_precomputeed = False
-        print(data_precomputeed)
 
     if demonet in ['vgg16_COCO','vgg16_VOC07','vgg16_VOC12']:
         num_features = 4096
@@ -389,7 +387,7 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
 
     dim_rois = 5
   
-    cachefilefolder = os.path.join(path_data,'cachefile')
+    cachefilefolder = os.path.join(path_output,'cachefile')
 
     cachefile_model_base='WLS_'+ database+ '_'+demonet+'_r'+str(restarts)+'_s' \
         +str(mini_batch_size)+'_k'+str(k_per_bag)+'_m'+str(max_iters)+extPar+\
@@ -453,6 +451,7 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
          with open(cachefile_model, 'wb') as f:
              pickle.dump(name_milsvm, f)
     else:
+        if verbose: print("We will load the existing model")
         export_dir,np_pos_value,np_neg_value= name_milsvm   
 
     true_label_all_test,predict_label_all_test,name_all_test,labels_test_predited \
@@ -484,7 +483,7 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
     
     # Detection evaluation
     if database in ['watercolor','clipart','PeopleArt','IconArt_v1']:
-        det_file = os.path.join(path_data,'cachefile', 'detections_aux.pkl')
+        det_file = os.path.join(cachefilefolder, 'detections_aux.pkl')
         with open(det_file, 'wb') as f:
             pickle.dump(all_boxes, f, pickle.HIGHEST_PROTOCOL)
         max_per_image = 100
@@ -522,10 +521,10 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
                         keep = np.where(all_boxes_order[j][i][:, -1] >= image_thresh)[0]
                         all_boxes_order[j][i] = all_boxes_order[j][i][keep, :]
         assert (number_im==num_images_detect) # To check that we have the all the images in the detection prediction
-        det_file = os.path.join(path_data, 'detections.pkl')
+        det_file = os.path.join(cachefilefolder, 'detections.pkl')
         with open(det_file, 'wb') as f:
             pickle.dump(all_boxes_order, f, pickle.HIGHEST_PROTOCOL)
-        output_dir = path_data +'tmp/' + database+'_mAP.txt'
+        output_dir = os.path.join(cachefilefolder,'tmp',database+'_mAP.txt')
         aps =  imdb.evaluate_detections(all_boxes_order, output_dir)
         apsAt05 = aps
         print("Detection score (thres = 0.5): ",database,'with MI_Max with score =',with_scores)
@@ -741,7 +740,7 @@ def tfR_evaluation_parall(database,num_classes,
             else:
                 Prod_best =  get_tensor_by_nameDescendant(graph,"Prod")
             if with_tanh:
-                print('We add the tanh in the test fct to get score between -1 and 1.')
+                if verbose: print('We add the tanh in the test fct to get score between -1 and 1.')
                 Tanh = tf.tanh(Prod_best)
                 mei = tf.argmax(Tanh,axis=2)
                 score_mei = tf.reduce_max(Tanh,axis=2)
