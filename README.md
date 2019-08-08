@@ -70,7 +70,7 @@ You have to unzip the dataset in the data folder.
 
 ### Description of the pipeline :
 
-We will first download the required dataset, compute the features and boxes from a Faster RCNN (recorded in a tfrecords file) and then train a MI_max model before runnning the detection evaluation. 
+We will first download the required dataset, compute the features and boxes from a Faster RCNN (recorded in a tfrecords file) and then train a MI_max model before runnning the detection evaluation. The precomputation may require several dozen of GB.
 
 You can add your own dataset, it only required to be in the PASCAL VOC format.
 
