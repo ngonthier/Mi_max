@@ -49,7 +49,7 @@ If you don't have the admin right try :
   cd ../
   ```
 
-This code have been tested on Ubuntu 18.04 and 16.04 with python 3.6 .
+This code have been tested on Ubuntu 18.04 and 16.04 with python 3.6 and Tensorflow 1.8 .
 
 ### Download the pre-trained models
 You cannot download the pre-trained models through the link and saved same to the model folder :
