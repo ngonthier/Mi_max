@@ -12,15 +12,17 @@ By [Gonhier Nicolas](https://perso.telecom-paristech.fr/gonthier/), [Gousseau Ya
   git clone git@github.com:nicaogr/Mi_max.git
   ```
 
-2. You need to install all the required python library such as tensorflow, cython, opencv-python and easydict. We advice you to create a [conda environnement](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) or equivalent.
+2. You need to install all the required python library such as tensorflow, cython, opencv-python, numpy, cython_bbox and easydict. We advice you to create a [conda environnement](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) or equivalent.
 
-You can use the requirements.txt file :
+You can use the requirements.txt file and the install [cython_bbox](https://pypi.org/project/cython-bbox/) :
   ```Shell
   pip install -r requirements.txt
+  pip install cython_bbox
   ```
 If you don't have the admin right try :
   ```Shell
   pip install --user -r requirements.txt
+  pip install --user cython_bbox
   ```
 3. Update your -arch in setup script to match your GPU for the faster RCNN code. This code is a modify version of the [Xinlei Chen](https://github.com/endernewton) [implementation](https://github.com/endernewton/tf-faster-rcnn).
   ```Shell
@@ -47,7 +49,7 @@ If you don't have the admin right try :
   cd ../
   ```
 
-This code have been tested on Ubuntu 18.04 and 16.04 with python 3.6 .
+This code have been tested on Ubuntu 18.04 and 16.04 with python 3.6 and Tensorflow 1.8 .
 
 ### Download the pre-trained models
 You cannot download the pre-trained models through the link and saved same to the model folder :
