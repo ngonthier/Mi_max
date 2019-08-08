@@ -272,8 +272,10 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
     for set_str in sets:
         name_pkl_all_features =  os.path.join(path_output,metamodel+'_'+ demonet +'_'+database+'_N'+str(N)+extL2+'_TLforMIL_nms_'+str(nms_thresh)+savedstr+k_per_bag_str+'_'+set_str+'.tfrecords')
         dict_name_file[set_str] = name_pkl_all_features
-        if set_str in ['trainval','test'] and not(os.path.isfile(name_pkl_all_features)):
+        print(name_pkl_all_features)
+        if not(os.path.isfile(name_pkl_all_features)):
             data_precomputeed = False
+        print(data_precomputeed)
 
     if demonet in ['vgg16_COCO','vgg16_VOC07','vgg16_VOC12']:
         num_features = 4096
@@ -285,9 +287,10 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
         if verbose: print("We will use a Faster RCNN as feature extractor and region proposals")
         if metamodel=='FasterRCNN':
             Compute_Faster_RCNN_features(demonet=demonet,nms_thresh =nms_thresh,
-                                         database=database,augmentation=False,L2 =False,
-                                         saved='all',verbose=verbose,filesave='tfrecords',
-                                         k_regions=k_per_bag)
+                                         database=database,verbose=verbose,
+                                         k_regions=k_per_bag,path_data=path_data,
+                                         path_output=path_output,
+                                         path_to_model=path_to_model)
         else:
             raise(NotImplementedError)
  
