@@ -58,14 +58,15 @@ This code have been tested on Ubuntu 18.04 and 16.04 with python 3.6 and Tensorf
 You have to download the pre-trained models through the link below and saved them to the model folder after decompressed it :
   - Google drive [here](https://drive.google.com/open?id=0B1_fAEgxdnvJSmF3YUlZcHFqWTQ).
   
-Here the matching between the network and training set and the ckpt weights file name : 
-    vgg16_VOC07  : vgg16_faster_rcnn_iter_70000.ckpt  
-    vgg16_VOC12  : vgg16_faster_rcnn_iter_110000.ckpt  
-    vgg16_COCO  : vgg16_faster_rcnn_iter_1190000.ckpt  
-    res101_VOC07  : res101_faster_rcnn_iter_70000.ckpt  
-    res101_VOC12  : res101_faster_rcnn_iter_110000.ckpt  
-    res101_COCO  : res101_faster_rcnn_iter_1190000.ckpt  
-    res152_COCO  : res152_faster_rcnn_iter_1190000.ckpt 
+Here the matching between the network and training set and the ckpt weights file name, the last one is the one used by default in our code and our research paper : 
+  | -------------------------- | -------------------------- |
+  |   vgg16_VOC07  |  vgg16_faster_rcnn_iter_70000.ckpt  | 
+  |   vgg16_VOC12  |  vgg16_faster_rcnn_iter_110000.ckpt  | 
+  |   vgg16_COCO  |  vgg16_faster_rcnn_iter_1190000.ckpt  | 
+  |   res101_VOC07  | res101_faster_rcnn_iter_70000.ckpt  | 
+  |   res101_VOC12  |  res101_faster_rcnn_iter_110000.ckpt  | 
+  |   res101_COCO  |  res101_faster_rcnn_iter_1190000.ckpt  | 
+  |   res152_COCO  |  res152_faster_rcnn_iter_1190000.ckpt | 
 
 ### You may need to download the images datasets : (even if the 
 
@@ -89,12 +90,14 @@ For the MI_max model :
 
 For the MI_max-C model (the dataset is split in 2 and several different values for C are used) : 
   ```Shell
-  python Run_MImax.py --dataset IconArt_v1 --with_score --CV_Mode CV --C_Searchings
+  python Run_MImax.py --dataset IconArt_v1 --with_score --CV_Mode CV --C_Searching
   ```
 
 In the Run_MImax.py , you can find other parameters of the model that you can change such as the learning rate (LR), the regularization term (C), the loss ('' or 'hinge'), the number of restarts etc.
 
 ### Remark
+
+The training part of the MI_max is trained in around 6 minutes on a good consumer GPU but we are sure that it is possible to speed it up.
 
 Don't hesitate to contact us, if you have any question or remarks about our code and our work.
 
