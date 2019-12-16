@@ -1,6 +1,6 @@
 numpy>=1.16.3
 scipy>=1.2.1
-tensorflow-gpu==1.8.0
+tensorflow-gpu==1.15.0
 opencv_contrib_python>=4.1.0.25
 easydict>=1.9
 Cython>=0.29.10
