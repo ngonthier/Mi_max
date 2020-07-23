@@ -1,6 +1,6 @@
 # MI_max : Multi Instance Perceptron for weakly supervised transfer learning of deep detector - [Weakly Supervised Object Detection in Artworks](https://arxiv.org/abs/1810.02569)
 
-By [Gonhier Nicolas](https://perso.telecom-paristech.fr/gonthier/), [Gousseau Yann](https://perso.telecom-paristech.fr/gousseau/), [Ladjal Said](https://perso.telecom-paristech.fr/ladjal/) and [Bonfait Olivier](http://tristan.u-bourgogne.fr/CGC/chercheurs/Bonfait/Olivier_Bonfait.html).
+By [Gonhier Nicolas](https://perso.telecom-paristech.fr/gonthier/), [Gousseau Yann](https://perso.telecom-paristech.fr/gousseau/), [Ladjal Saïd](https://perso.telecom-paristech.fr/ladjal/) and [Bonfait Olivier](http://tristan.u-bourgogne.fr/CGC/chercheurs/Bonfait/Olivier_Bonfait.html).
 **This is a Tensorflow implementation of our Mi_max model.**
 
 **This code can be used to reproduce results on [IconArt](https://wsoda.telecom-paristech.fr/downloads/dataset/), [Watercolor2k](https://github.com/naoto0804/cross-domain-detection) and [PeopleArt](https://github.com/BathVisArtData/PeopleArt) datasets **
@@ -59,6 +59,7 @@ You have to download the pre-trained models through the link below and saved the
   - Google drive [here](https://drive.google.com/open?id=0B1_fAEgxdnvJSmF3YUlZcHFqWTQ).
   
 Here the matching between the network and training set and the ckpt weights file name, the last one is the one used by default in our code and our research paper : 
+
   | -------------------------- | -------------------------- |
   |   vgg16_VOC07  |  vgg16_faster_rcnn_iter_70000.ckpt  | 
   |   vgg16_VOC12  |  vgg16_faster_rcnn_iter_110000.ckpt  | 
@@ -68,7 +69,7 @@ Here the matching between the network and training set and the ckpt weights file
   |   res101_COCO  |  res101_faster_rcnn_iter_1190000.ckpt  | 
   |   res152_COCO  |  res152_faster_rcnn_iter_1190000.ckpt | 
 
-### You may need to download the images datasets : (even if the 
+### You may need to download the images datasets :  
 
 You have to unzip the dataset in the data folder.
 
