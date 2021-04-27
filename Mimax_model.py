@@ -388,13 +388,14 @@ class tf_MI_max():
 #        if self.AddOneLayer: # Model with one hidden layer
 #            Max=tf.reduce_max(Prod,axis=1) 
 #            Max = tf.transpose(Max,perm=[1,0])
+        #else:
+        Max=tf.reduce_max(Prod,axis=-1) 
+            
         if self.Polyhedral:
             Max_reshaped = tf.reshape(Max,(self.num_classes,self.paral_number_W,-1))
             MaxOfMax = tf.reduce_max(Max_reshaped,axis=1) 
             # We take the max on the scalar product of the same class
             Max = MaxOfMax
-        else:
-            Max=tf.reduce_max(Prod,axis=-1) 
 
         if self.is_betweenMinus1and1:
             weights_bags_ratio = -tf.divide(tf.add(y_,1.),tf.multiply(2.,np_pos_value)) + tf.divide(tf.add(y_,-1.),tf.multiply(-2.,np_neg_value))
@@ -443,12 +444,14 @@ class tf_MI_max():
 #        if self.AddOneLayer: # Case Hidden Layer
 #                    Max_batch=tf.reduce_max(Prod_batch,axis=1) # We take the max because we have at least one element of the bag that is positive
 #                    Max_batch = tf.transpose(Max_batch,perm=[1,0]) # Shape = num_classes, batch size
+        # else
+        Max_batch=tf.reduce_max(Prod_batch,axis=-1)# Case normal
+            
         if self.MaxOfMax: # Case Polyhderal 
                     Max_batch_reshaped = tf.reshape(Max_batch,(self.num_classes,self.paral_number_W,-1))
                     MaxOfMax_batch = tf.reduce_max(Max_batch_reshaped,axis=1) # We take the max on the scalar product of the same class
                     Max_batch = MaxOfMax_batch
-        else: # Case normal
-            Max_batch=tf.reduce_max(Prod_batch,axis=-1)
+            
         # We take the max because we have at least one element of the bag that is positive
 
         if self.is_betweenMinus1and1:
