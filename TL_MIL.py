@@ -217,7 +217,8 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
                                   C_Searching=False,
                                   thresh_evaluation=0.05,TEST_NMS=0.3,
                                   mini_batch_size=None,loss_type='',
-                                  path_data='data',path_output='output',path_to_model='models'):
+                                  path_data='data',path_output='output',path_to_model='models',
+                                  Polyhedral=Polyhedral):
     """ 
     This function used TFrecords file 
     
@@ -248,7 +249,8 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
     @param : thresh_evaluation : 0.05 : seuillage avant de fournir les boites a l evaluation de detections
     @param : TEST_NMS : 0.3 : recouvrement autorise avant le NMS avant l evaluation de detections
     @param : mini_batch_size if None or 0 an automatic adhoc mini batch size is set
-   
+    @param : Polyhedral consider the polyhedral model 
+    
     This function output AP for different dataset for the weakly supervised task 
     
     """
@@ -389,9 +391,14 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
   
     cachefilefolder = os.path.join(path_output,'cachefile')
 
+    if Polyhedral: 
+        poly_str = '_Poly'
+    else:
+        poly_str = ''
+
     cachefile_model_base='WLS_'+ database+ '_'+demonet+'_r'+str(restarts)+'_s' \
         +str(mini_batch_size)+'_k'+str(k_per_bag)+'_m'+str(max_iters)+extPar+\
-        extCV+opti_str+LR_str+C_str+with_scores_str+ loss_type_str
+        extCV+opti_str+LR_str+C_str+with_scores_str+ loss_type_str+poly_str
     pathlib.Path(cachefilefolder).mkdir(parents=True, exist_ok=True)
     cachefile_model = os.path.join(cachefilefolder,cachefile_model_base+'_'+model_str+'.pkl')
 
@@ -438,7 +445,7 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
                verbose=verboseMI_max,Optimizer=Optimizer,
                mini_batch_size=mini_batch_size,num_features=num_features,
                num_classes=num_classes,num_split=num_split,CV_Mode=CV_Mode,with_scores=with_scores,
-               epsilon=epsilon,loss_type=loss_type,usecache=usecache)
+               epsilon=epsilon,loss_type=loss_type,usecache=usecache,Polyhedral=Polyhedral)
          export_dir = classifierMI_max.fit_MI_max_tfrecords(data_path=data_path_train, \
                shuffle=shuffle,C_Searching=C_Searching)  
              

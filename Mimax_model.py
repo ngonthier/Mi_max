@@ -52,7 +52,7 @@ class tf_MI_max():
                   num_rois=300,num_classes=10,loss_type='',
                   is_betweenMinus1and1=False,CV_Mode=None,num_split=2,with_scores=False,
                   epsilon=0.0,usecache=True,normalizeW=False,
-                  Polyhedral=False): 
+                  Polyhedral=False,AddOneLayer=False): 
         """
         @param LR : Learning rate : pas de gradient de descente [default: 0.01]
         @param C : the loss/regularization tradeoff constant [default: 1.0]
@@ -94,6 +94,7 @@ class tf_MI_max():
         @param : Polyhedral use the max of the max of product and keep all the (W,b) learnt
             in order to have a polyhedral model
             (default False)
+        @param : AddOneLayer : Model with one Hidden Layer 
         """
         self.LR = LR
         self.C = C
@@ -127,6 +128,7 @@ class tf_MI_max():
         self.usecache = usecache
         self.normalizeW = normalizeW
         self.Polyhedral = Polyhedral
+        self.AddOneLayer = AddOneLayer
         
     def parser(self,record):
 
@@ -231,7 +233,7 @@ class tf_MI_max():
         if self.class_indice==-1:
             if self.restarts_paral_V2:
                 loss_value = np.zeros((self.paral_number_W*self.num_classes,),dtype=np.float32)
-                if self.MaxOfMax or self.MaxMMeanOfMax or self.MaxTopMinOfMax:
+                if self.Polyhedral:
                     loss_value = np.zeros((self.num_classes,),dtype=np.float32)
             elif self.restarts_paral_Dim:
                 loss_value = np.zeros((self.paral_number_W,self.num_classes),dtype=np.float32)
@@ -255,6 +257,10 @@ class tf_MI_max():
         run all the class at once
         @param : shuffle or not the dataset 
         """
+        
+#        if self.AddOneLayer and self.Polyhedral: # Need to AddOneLayer by HL  
+#             print("Polyhdral  and AddOneLayer together not implemented.")
+#             raise(NotImplementedError)
         
         self.C_Searching= C_Searching
 
@@ -379,7 +385,16 @@ class tf_MI_max():
             if self.verbose: print('With score multiplication')
             Prod=tf.multiply(Prod,tf.add(scores_,self.epsilon))
 
-        Max=tf.reduce_max(Prod,axis=-1) 
+#        if self.AddOneLayer: # Model with one hidden layer
+#            Max=tf.reduce_max(Prod,axis=1) 
+#            Max = tf.transpose(Max,perm=[1,0])
+        if self.Polyhedral:
+            Max_reshaped = tf.reshape(Max,(self.num_classes,self.paral_number_W,-1))
+            MaxOfMax = tf.reduce_max(Max_reshaped,axis=1) 
+            # We take the max on the scalar product of the same class
+            Max = MaxOfMax
+        else:
+            Max=tf.reduce_max(Prod,axis=-1) 
 
         if self.is_betweenMinus1and1:
             weights_bags_ratio = -tf.divide(tf.add(y_,1.),tf.multiply(2.,np_pos_value)) + tf.divide(tf.add(y_,-1.),tf.multiply(-2.,np_neg_value))
@@ -388,8 +403,12 @@ class tf_MI_max():
         else:
             weights_bags_ratio = -tf.divide(y_,np_pos_value) + tf.divide(-tf.add(y_,-1),np_neg_value)
 
-        weights_bags_ratio = tf.tile(tf.transpose(weights_bags_ratio,[1,0]),[self.paral_number_W,1])
-        y_long_pm1 = tf.tile(tf.transpose(tf.add(tf.multiply(y_,2),-1),[1,0]), [self.paral_number_W,1])
+        if not(self.Polyhedral):
+            weights_bags_ratio = tf.tile(tf.transpose(weights_bags_ratio,[1,0]),[self.paral_number_W,1])
+            y_long_pm1 = tf.tile(tf.transpose(tf.add(tf.multiply(y_,2),-1),[1,0]), [self.paral_number_W,1])
+        else:
+            weights_bags_ratio = tf.transpose(weights_bags_ratio,[1,0])
+            y_long_pm1 = tf.transpose(tf.add(tf.multiply(y_,2),-1),[1,0])
            
         y_tilde_i = tf.tanh(Max)
         if self.loss_type == '' or self.loss_type is None:
@@ -402,8 +421,17 @@ class tf_MI_max():
         if self.C_Searching:    
             loss= tf.add(Tan,tf.multiply(C_value_repeat,tf.reduce_sum(tf.pow(W_r,2),axis=-1)))
         else:
-            W_r_reduce = tf.reduce_sum(tf.pow(W_r,2),axis=-1)
+            
+            if self.Polyhedral:
+                W_r_reduce = tf.reshape(tf.reduce_sum(tf.pow(W_r,2),axis=-1),(self.num_classes,self.paral_number_W))
+                W_r_reduce = tf.reduce_mean(W_r_reduce,axis=-1)
+            else:          
+                W_r_reduce = tf.reduce_sum(tf.pow(W_r,2),axis=-1)
+                
             loss= tf.add(Tan,tf.multiply(self.C,W_r_reduce))
+            
+#            if self.AddOneLayer:
+#                loss = tf.add(loss,tf.multiply(self.C,tf.reduce_sum(tf.pow(W0,2),axis=[-2,-1])))
                         
         #Definition on batch
         Prod_batch = tf.einsum('ak,ijk->aij',W_r,X_batch)
@@ -411,8 +439,17 @@ class tf_MI_max():
            
         if self.with_scores: 
             Prod_batch=tf.multiply(Prod_batch,tf.add(scores_batch,self.epsilon))
-           
-        Max_batch=tf.reduce_max(Prod_batch,axis=-1) # We take the max because we have at least one element of the bag that is positive
+#           
+#        if self.AddOneLayer: # Case Hidden Layer
+#                    Max_batch=tf.reduce_max(Prod_batch,axis=1) # We take the max because we have at least one element of the bag that is positive
+#                    Max_batch = tf.transpose(Max_batch,perm=[1,0]) # Shape = num_classes, batch size
+        if self.MaxOfMax: # Case Polyhderal 
+                    Max_batch_reshaped = tf.reshape(Max_batch,(self.num_classes,self.paral_number_W,-1))
+                    MaxOfMax_batch = tf.reduce_max(Max_batch_reshaped,axis=1) # We take the max on the scalar product of the same class
+                    Max_batch = MaxOfMax_batch
+        else: # Case normal
+            Max_batch=tf.reduce_max(Prod_batch,axis=-1)
+        # We take the max because we have at least one element of the bag that is positive
 
         if self.is_betweenMinus1and1:
             weights_bags_ratio_batch = -tf.divide(tf.add(label_batch,1.),tf.multiply(2.,np_pos_value)) + tf.divide(tf.add(label_batch,-1.),tf.multiply(-2.,np_neg_value))
@@ -420,8 +457,13 @@ class tf_MI_max():
             # The wieght are negative for the positive exemple and positive for the negative ones !!!
         else:
             weights_bags_ratio_batch = -tf.divide(label_batch,np_pos_value) + tf.divide(-tf.add(label_batch,-1),np_neg_value) # Need to add 1 to avoid the case 
-        weights_bags_ratio_batch = tf.tile(tf.transpose(weights_bags_ratio_batch,[1,0]),[self.paral_number_W,1])
-        y_long_pm1_batch =  tf.tile(tf.transpose(tf.add(tf.multiply(label_batch,2),-1),[1,0]), [self.paral_number_W,1])
+        
+        if not(self.Polyhedral): # Case MImax linear
+            weights_bags_ratio_batch = tf.tile(tf.transpose(weights_bags_ratio_batch,[1,0]),[self.paral_number_W,1])
+            y_long_pm1_batch =  tf.tile(tf.transpose(tf.add(tf.multiply(label_batch,2),-1),[1,0]), [self.paral_number_W,1])
+        else:
+            weights_bags_ratio_batch = tf.transpose(weights_bags_ratio_batch,[1,0])
+            y_long_pm1_batch =  tf.transpose(tf.add(tf.multiply(label_batch,2),-1),[1,0])
     
         y_tilde_i_batch = Max_batch
                 
@@ -471,6 +513,7 @@ class tf_MI_max():
         if self.normalizeW:
             sess.run(normalize_W) # Normalize the W vector
         
+        # Running the optimization process
         if self.Optimizer in ['GradientDescent','Momentum','Adam']:
             for step in range(self.max_iters):
                 sess.run(train)
@@ -484,9 +527,13 @@ class tf_MI_max():
         else:
             print("The optimizer is unknown",self.Optimizer)
             raise(NotImplementedError)
-                
-
-        loss_value = np.zeros((self.paral_number_W*self.num_classes,),dtype=np.float32)
+            
+        # Initialization of the loss fct for computing the best couple (W,b) 
+        if not(self.Polyhedral): # Normal case (linear)            
+            loss_value = np.zeros((self.paral_number_W*self.num_classes,),dtype=np.float32)
+        else:
+            loss_value = np.zeros((self.num_classes,),dtype=np.float32)
+            
         sess.run(iterator_batch.initializer)
 
         while True:
@@ -500,9 +547,12 @@ class tf_MI_max():
         loss_value_min = []
         W_best = np.zeros((self.num_classes,self.num_features),dtype=np.float32)
         b_best = np.zeros((self.num_classes,1,1),dtype=np.float32)
-        if self.restarts>0:
+        if not(self.Polyhedral) and self.restarts>0:
             W_tmp=sess.run(W)
             b_tmp=sess.run(b)
+#            if self.AddOneLayer:
+#                W0_tmp=sess.run(W0)
+#                b0_tmp=sess.run(b0)
             for j in range(self.num_classes):
                 loss_value_j = loss_value[j::self.num_classes]
 #                                print('loss_value_j',loss_value_j)
@@ -520,7 +570,7 @@ class tf_MI_max():
                 t1 = time.time()
                 print("durations after simple training :",str(t1-t0),' s')
         else:
-            # In the case of MaxOfMax : we keep all the vectors
+            # In the Polyhedral case : we keep all the vectors
             W_best=sess.run(W)
             b_best=sess.run(b)
             if self.verbose : print("loss",loss_value)
@@ -533,7 +583,14 @@ class tf_MI_max():
         if self.with_scores:
             scores_ = tf.identity(scores_,name="scores")
 
-        Prod_best=tf.add(tf.einsum('ak,ijk->aij',tf.convert_to_tensor(W_best),X_)\
+        if self.Polyhedral:
+            Product = tf.add(tf.einsum('ak,ijk->aij',tf.convert_to_tensor(W_best),X_)\
+                                 ,b_best)
+            Product = tf.reshape(Product,(self.num_classes,self.paral_number_W,-1,self.num_rois))
+            Prod_best=tf.reduce_max(Product,axis=1,name='Prod')
+            
+        else: # Linear case
+            Prod_best=tf.add(tf.einsum('ak,ijk->aij',tf.convert_to_tensor(W_best),X_)\
                      ,b_best,name='Prod')
 
         #Integration du score dans ce qui est retourner a la fin

@@ -59,6 +59,9 @@ def parse_args():
   parser.add_argument('--restarts', dest='restarts',
       help='Number of reinitialization',
       default=11, type=int)
+  parser.add_argument('--Polyhedral', dest='Polyhedral',
+      help='Consider the polyhedral Mimax model.',
+      action='store_true')
   parser.add_argument('--max_iters_all_base', dest='max_iters_all_base',
       help='Number of iterations',
       default=300, type=int)
@@ -95,7 +98,7 @@ if __name__ == '__main__':
                                   thresh_evaluation=0.05,TEST_NMS=0.3,
                                   mini_batch_size=args.mini_batch_size,loss_type=args.loss_type,
                                   path_data=args.path_data,path_output=args.path_output,
-                                  path_to_model=args.path_to_model)
+                                  path_to_model=args.path_to_model,Polyhedral=args.Polyhedral)
     
     
     

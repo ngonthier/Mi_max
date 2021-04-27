@@ -93,6 +93,11 @@ For the MI_max-C model (the dataset is split in 2 and several different values f
   ```Shell
   python Run_MImax.py --dataset IconArt_v1 --with_score --CV_Mode CV --C_Searching
   ```
+  
+For the Polyhedral MI_max model (from [Multiple instance learning on deep features for weakly supervised object detection with extreme domain shifts](https://arxiv.org/abs/2008.01178)) you can use the following command :
+  ```Shell
+  python Run_MImax.py --dataset IconArt_v1 --with_score --Polyhedral
+  ```
 
 In the Run_MImax.py , you can find other parameters of the model that you can change such as the learning rate (LR), the regularization term (C), the loss ('' or 'hinge'), the number of restarts etc.
 
