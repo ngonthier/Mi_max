@@ -40,6 +40,10 @@ class tf_MI_max():
     """
     The MI_Max model proposed in Weakly Supervised Object Detection in Artworks
     https://arxiv.org/abs/1810.02569
+    
+    This function also contains the Polyhedral Mimax model proposed in 
+    Multiple instance learning on deep features for weakly supervised object detection with extreme domain shifts
+    https://arxiv.org/abs/2008.01178
     """
 
     def __init__(self,LR=0.01,C=1.0,restarts=0, max_iters=300,
@@ -47,7 +51,8 @@ class tf_MI_max():
                  buffer_size=10000,num_features=2048,
                   num_rois=300,num_classes=10,loss_type='',
                   is_betweenMinus1and1=False,CV_Mode=None,num_split=2,with_scores=False,
-                  epsilon=0.0,usecache=True,normalizeW=False): 
+                  epsilon=0.0,usecache=True,normalizeW=False,
+                  Polyhedral=False): 
         """
         @param LR : Learning rate : pas de gradient de descente [default: 0.01]
         @param C : the loss/regularization tradeoff constant [default: 1.0]
@@ -86,6 +91,9 @@ class tf_MI_max():
         @param with_scores : default False : Multiply the scalar product before the max by the objectness score from the FasterRCNN
         @param epsilon : default 0. : The term we add to the object score
         @param normalizeW : normalize the W vectors before optimization
+        @param : Polyhedral use the max of the max of product and keep all the (W,b) learnt
+            in order to have a polyhedral model
+            (default False)
         """
         self.LR = LR
         self.C = C
@@ -118,6 +126,7 @@ class tf_MI_max():
         self.C_values =  np.arange(0.5,1.5,0.1,dtype=np.float32) # Case used in VISART2018
         self.usecache = usecache
         self.normalizeW = normalizeW
+        self.Polyhedral = Polyhedral
         
     def parser(self,record):
 

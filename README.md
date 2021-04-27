@@ -3,7 +3,7 @@
 By [Gonhier Nicolas](https://perso.telecom-paristech.fr/gonthier/), [Gousseau Yann](https://perso.telecom-paristech.fr/gousseau/), [Ladjal Saïd](https://perso.telecom-paristech.fr/ladjal/) and [Bonfait Olivier](http://tristan.u-bourgogne.fr/CGC/chercheurs/Bonfait/Olivier_Bonfait.html).
 **This is a Tensorflow implementation of our Mi_max model.**
 
-**This code can be used to reproduce results on [IconArt](https://wsoda.telecom-paristech.fr/downloads/dataset/), [Watercolor2k](https://github.com/naoto0804/cross-domain-detection) and [PeopleArt](https://github.com/BathVisArtData/PeopleArt) datasets **
+**This code can be used to reproduce results on [IconArt](https://wsoda.telecom-paristech.fr/downloads/dataset/), [Watercolor2k, Clipart1k, Comic2k](https://github.com/naoto0804/cross-domain-detection), [CASPApaintings](https://people.cs.pitt.edu/~chris/artistic_objects/) and [PeopleArt](https://github.com/BathVisArtData/PeopleArt) datasets **
 
 
 ### Installation
@@ -112,4 +112,12 @@ Please consider citing:
          year         = "2018",
          publisher    = "Springer International Publishing",
          pages        = "692--709"
+    }
+    @misc{gonthier2020multiple,
+          title={Multiple instance learning on deep features for weakly supervised object detection with extreme domain shifts}, 
+          author={Nicolas Gonthier and Saïd Ladjal and Yann Gousseau},
+          year={2020},
+          eprint={2008.01178},
+          archivePrefix={arXiv},
+          primaryClass={cs.CV}
     }
