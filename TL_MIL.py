@@ -218,7 +218,7 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
                                   thresh_evaluation=0.05,TEST_NMS=0.3,
                                   mini_batch_size=None,loss_type='',
                                   path_data='data',path_output='output',path_to_model='models',
-                                  Polyhedral=Polyhedral):
+                                  Polyhedral=False):
     """ 
     This function used TFrecords file 
     
