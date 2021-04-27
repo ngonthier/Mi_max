@@ -508,7 +508,7 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
                 name_img_wt_ext = name_img.split('/')[-1]
                 name_img_wt_ext =name_img_wt_ext.split('.')[0]
             name_img_ind = np.where(np.array(name_all_test)==name_img_wt_ext)[0]
-            #print(name_img_ind)
+            print(name_img_ind)
             if len(name_img_ind)==0:
                 print('len(name_img_ind), images not found in the all_boxes')
                 print(name_img_wt_ext)
