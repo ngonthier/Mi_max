@@ -447,7 +447,7 @@ class tf_MI_max():
         # else
         Max_batch=tf.reduce_max(Prod_batch,axis=-1)# Case normal
             
-        if self.Polyhderal: # Case Polyhderal 
+        if self.Polyhedral: # Case Polyhderal 
             Max_batch_reshaped = tf.reshape(Max_batch,(self.num_classes,self.paral_number_W,-1))
             MaxOfMax_batch = tf.reduce_max(Max_batch_reshaped,axis=1) # We take the max on the scalar product of the same class
             Max_batch = MaxOfMax_batch
