@@ -471,6 +471,8 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
                ,PlotRegions=PlotRegions,cachefile_model_base=cachefile_model_base,number_im=np.inf,dim_rois=dim_rois,
                usecache=usecache_eval,k_per_bag=k_per_bag,num_features=num_features)
     
+    print(name_all_test)
+    input('debug')
     for j,classe in enumerate(classes):
         AP = average_precision_score(true_label_all_test[:,j],predict_label_all_test[:,j],average=None)
         print("MI_Max version Average Precision for",classes[j]," = ",AP)
@@ -494,7 +496,7 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
         with open(det_file, 'wb') as f:
             pickle.dump(all_boxes, f, pickle.HIGHEST_PROTOCOL)
         max_per_image = 100
-        num_images_detect = len(imdb.image_index)  # We do not have the same number of images in the WikiTenLabels or IconArt_v1 case
+        num_images_detect = len(imdb.image_index)  # We do not have the same number of images in the IconArt_v1 case
         all_boxes_order = [[[] for _ in range(num_images_detect)] for _ in range(imdb.num_classes)]
         number_im = 0
         name_all_test = name_all_test.astype(str)
