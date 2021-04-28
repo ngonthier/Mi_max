@@ -50,6 +50,12 @@ class CrossMod_db(imdb):
                          'cow', 'diningtable', 'dog', 'horse',
                          'motorbike', 'person', 'pottedplant',
                          'sheep', 'sofa', 'train', 'tvmonitor')
+    elif self._image_db == 'comic': # In the clipart case
+        self._classes = ('__background__',  # always index 0
+                         'bike','bird','car','cat','dog','person')
+    elif self._image_db == 'CASPApaintings': # In the clipart case
+        self._classes = ('__background__',  # always index 0
+                          "bear", "bird", "cat", "cow", "dog", "elephant", "horse", "sheep")
     else:
         raise(NotImplemented)
     self._class_to_ind = dict(list(zip(self.classes, list(range(self.num_classes)))))

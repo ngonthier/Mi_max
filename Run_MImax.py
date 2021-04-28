@@ -16,7 +16,7 @@ def parse_args():
   parser = argparse.ArgumentParser(description='Train a Weakly Supervised MI_Max model')
   parser.add_argument('--dataset', dest='dataset',
       help='training dataset',
-      default='IconArt_v1', type=str)
+      default='CASPApaintings', type=str) # IconArt_v1  comic watercolor CASPApaintings
   parser.add_argument('--net', dest='net',
       help='res152_COCO',
       default='res152_COCO', type=str)

@@ -71,11 +71,14 @@ Here the matching between the network and training set and the ckpt weights file
 
 ### You may need to download the images datasets :  
 
-You have to unzip the dataset in the data folder.
+You may want to unzip the dataset in the data folder. Otherwise it will be download automatically.
 
  - [IconArt](https://wsoda.telecom-paristech.fr/downloads/dataset/IconArt_v1.zip)
  - [PeopleArt](https://codeload.github.com/BathVisArtData/PeopleArt/zip/master) with the [image level labels](https://wsoda.telecom-paristech.fr/downloads/dataset/PeopleArt.csv)
  - [Watercolor2k](http://www.hal.t.u-tokyo.ac.jp/~inoue/projects/cross_domain_detection/datasets/watercolor.zip)  with the [image level labels](https://wsoda.telecom-paristech.fr/downloads/dataset/watercolor.csv)
+ - [Comic2k](http://www.hal.t.u-tokyo.ac.jp/~inoue/projects/cross_domain_detection/datasets/comic.zip)  with the [image level labels](https://wsoda.telecom-paristech.fr/downloads/dataset/comic.csv)
+ - [Clipart1k](http://www.hal.t.u-tokyo.ac.jp/~inoue/projects/cross_domain_detection/datasets/clipart.zip)  with the [image level labels](https://wsoda.telecom-paristech.fr/downloads/dataset/clipart.csv)
+ - [CASPApaintings](https://wsoda.telecom-paristech.fr/downloads/dataset/CASPApaintings.zip)  with the [image level labels](https://wsoda.telecom-paristech.fr/downloads/dataset/CASPApaintings.csv)
 
 ### Description of the pipeline :
 

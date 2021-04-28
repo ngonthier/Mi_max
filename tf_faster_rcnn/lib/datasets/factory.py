@@ -18,7 +18,7 @@ from ..datasets.WikiTenLabels_db import WikiTenLabels_db
 from ..datasets.IconArt import IconArt_v1
 #from ..datasets.coco import coco # Commented by Nicolas because API COCO Python need python27 : it need to be modified problem with _mask
 
-def get_sets(data_path='/media/gonthier/HDD/data/'):
+def get_sets(data_path='/data/'):
   __sets = {}
   """Get an imdb (image database) by name.
   @param : data_path : localisation of the dataset
@@ -38,22 +38,24 @@ def get_sets(data_path='/media/gonthier/HDD/data/'):
   for db in ['watercolor','comic','clipart']:
     for split in ['train', 'test']:
         name = '{}_{}'.format(db,split)
-        __sets[name] = (lambda split=split, db=db: CrossMod_db(db,split,devkit_path=os.path.join(data_path,'cross-domain-detection','datasets'),test_ext=True))
- 
+        __sets[name] = (lambda split=split, db=db: CrossMod_db(db,split,devkit_path=os.path.join(data_path),test_ext=True))
+        # Maybe this can be needed depending on your way to download the dataset
+        #__sets[name] = (lambda split=split, db=db: CrossMod_db(db,split,devkit_path=os.path.join(data_path,'cross-domain-detection','datasets'),test_ext=True))
+
   for db in ['PeopleArt']:
     for split in ['train', 'test','trainval','val']:
         name = '{}_{}'.format(db,split)
         __sets[name] = (lambda split=split, db=db: CrossMod_db(db,split,devkit_path=data_path,test_ext=True))
  
-  for db in ['WikiTenLabels']:
-    for split in ['test']:
+  for db in ['CASPApaintings']:
+    for split in ['train', 'test']:
         name = '{}_{}'.format(db,split)
-        __sets[name] = (lambda split=split, db=db: WikiTenLabels_db(db,split,devkit_path=os.path.join(data_path,'Wikidata_Paintings'),test_ext=True))
-        
+        __sets[name] = (lambda split=split, db=db: CrossMod_db(db,split,devkit_path=data_path,test_ext=True))
+    
   for db in ['IconArt_v1']:
     for split in ['test','train']:
         name = '{}_{}'.format(db,split)
-        __sets[name] = (lambda split=split, db=db: IconArt_v1(db,split,devkit_path=os.path.join(data_path,'Wikidata_Paintings'),test_ext=True))
+        __sets[name] = (lambda split=split, db=db: IconArt_v1(db,split,devkit_path=os.path.join(data_path),test_ext=True))
  
 ## Set up coco_2014_<split>
 #for year in ['2014']:
@@ -69,7 +71,7 @@ def get_sets(data_path='/media/gonthier/HDD/data/'):
 
   return(__sets)
 
-def get_imdb(name,data_path='/media/gonthier/HDD/data/',ext=None):
+def get_imdb(name,data_path='data/',ext=None):
   """Get an imdb (image database) by name.
   @param : data_path : localisation of the dataset
   """

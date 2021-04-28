@@ -62,8 +62,18 @@ def get_database(database,default_path_imdb = 'data'):
         path_tmp = os.path.join(default_path_imdb,'IconArt_v1')
         path_to_img =os.path.join(path_tmp,'JPEGImages')
         url_dataset = 'https://wsoda.telecom-paristech.fr/downloads/dataset/IconArt_v1.zip'
+    elif database=='CASPApaintings':
+        ext = '.csv'
+        item_name = 'name_img'
+        path_tmp = os.path.join(default_path_imdb,'CASPApaintings')
+        path_to_img =os.path.join(path_tmp,'JPEGImages')
+        classes = ["bear", "bird", "cat", "cow", "dog", "elephant", "horse", "sheep"]    
+        url_file = 'https://wsoda.telecom-paristech.fr/downloads/dataset/CASPApaintings.csv'
+        # This dataset is a subset of the one provide by Thomas et al. 2018
+        # Here https://people.cs.pitt.edu/~chris/artistic_objects/
+        # We extract only the paintings and the bounding boxes of the animals
+        url_dataset = 'https://wsoda.telecom-paristech.fr/downloads/dataset/CASPApaintings.zip'
     elif database=='clipart':
-        raise(NotImplementedError)
         ext = '.csv'
         item_name = 'name_img'
         path_tmp = os.path.join(default_path_imdb,'clipart')
@@ -73,7 +83,17 @@ def get_database(database,default_path_imdb = 'data'):
            'cow', 'diningtable', 'dog', 'horse',
            'motorbike', 'person', 'pottedplant',
            'sheep', 'sofa', 'train', 'tvmonitor']
+        url_file = 'https://wsoda.telecom-paristech.fr/downloads/dataset/clipart.csv'
         url_dataset = 'http://www.hal.t.u-tokyo.ac.jp/~inoue/projects/cross_domain_detection/datasets/clipart.zip'
+    elif database=='comic':
+        ext = '.csv'
+        item_name = 'name_img'
+        path_tmp = os.path.join(default_path_imdb,'comic')
+        path_to_img = os.path.join(path_tmp,'JPEGImages')
+        classes =  ['bicycle','bird','car','cat','dog','person']
+        url_file = 'https://wsoda.telecom-paristech.fr/downloads/dataset/comic.csv'
+        url_dataset = 'http://www.hal.t.u-tokyo.ac.jp/~inoue/projects/cross_domain_detection/datasets/comic.zip'
+    
     else:
         print('This database don t exist :',database)
         raise NotImplementedError
@@ -90,7 +110,7 @@ def get_database(database,default_path_imdb = 'data'):
             # Extract all the contents of zip file in current directory
             zipObj.extractall(default_path_imdb)
         os.remove(tmp_zip)
-    if database in ['watercolor']:
+    if database in ['watercolor','clipart','CASPApaintings','comic','PeopleArt']:
         if not(os.path.exists(databasetxt)):
             # We also need to download the image level annotations file at the right format
             download_url(url_file, databasetxt)
@@ -106,7 +126,7 @@ def get_database(database,default_path_imdb = 'data'):
             # We also need to download the image level annotations file at the right format
         download_url(url_file, databasetxt)
 
-    if 'IconArt_v1' in database or 'IconArt_v1'==database or database=='RMN':
+    if 'IconArt_v1' in database or 'IconArt_v1'==database:
         dtypes = {0:str,'item':str,'angel':int,\
                       'Child_Jesus':int,'crucifixion_of_Jesus':int,'Mary':int,'nudity':int,\
                       'ruins':int,'Saint_Sebastien':int,\
@@ -118,7 +138,7 @@ def get_database(database,default_path_imdb = 'data'):
             dtypes[c] = int
     df_label = pd.read_csv(databasetxt,sep=",",dtype=dtypes)
     str_val = 'val'
-    if database in ['watercolor','clipart','PeopleArt']:
+    if database in ['watercolor','clipart','PeopleArt','comic','CASPApaintings']:
         str_val = 'val'
         df_label[classes] = df_label[classes].apply(lambda x:(x + 1.0)/2.0)
     

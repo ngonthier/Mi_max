@@ -251,7 +251,7 @@ def Compute_Faster_RCNN_features(demonet='res152_COCO',nms_thresh = 0.7,database
         
         if i%Itera==0:
             if verbose : print(i,name_img)
-        if database in ['IconArt_v1','watercolor']:
+        if database in ['IconArt_v1','watercolor','comic','clipart','CASPApaintings']:
             complet_name = os.path.join(path_to_img,name_img + '.jpg')
             name_sans_ext = name_img
         elif database=='PeopleArt':
@@ -306,7 +306,7 @@ def Compute_Faster_RCNN_features(demonet='res152_COCO',nms_thresh = 0.7,database
                 roi_scores =roi_scores_repeat[0:k_regions,]
                 fc7 = f_repeat[0:k_regions,:]
         
-        if database in ['watercolor','PeopleArt']:
+        if database in ['PeopleArt','watercolor','comic','clipart','CASPApaintings']:
             for j in range(num_classes):
                 value = int((int(df_label[classes[j]][i])+1.)/2.)
                 #print(value)
@@ -335,8 +335,8 @@ def Compute_Faster_RCNN_features(demonet='res152_COCO',nms_thresh = 0.7,database
                 dict_writers['trainval'].write(example.SerializeToString())
             elif (df_label.loc[df_label[item_name]==name_img]['set']=='test').any():
                 dict_writers['test'].write(example.SerializeToString())
-        if database in ['watercolor','IconArt_v1']\
-                        or 'IconArt_v1' in database:
+        if database in ['watercolor','IconArt_v1','comic','clipart','CASPApaintings']\
+                        or 'IconArt' in database:
             if (df_label.loc[df_label[item_name]==name_img]['set']=='train').any():
                 dict_writers['trainval'].write(example.SerializeToString())
             elif (df_label.loc[df_label[item_name]==name_img]['set']=='test').any():

@@ -425,6 +425,14 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
         imdb = get_imdb('clipart_test')
         imdb.set_force_dont_use_07_metric(dont_use_07_metric)
         num_images = len(imdb.image_index) 
+    elif database=='comic':
+        imdb = get_imdb('comic_test')
+        imdb.set_force_dont_use_07_metric(dont_use_07_metric)
+        num_images = len(imdb.image_index) 
+    elif database=='comic':
+        imdb = get_imdb('CASPApaintings_test')
+        imdb.set_force_dont_use_07_metric(dont_use_07_metric)
+        num_images = len(imdb.image_index)
     elif database=='IconArt_v1':
         imdb = get_imdb('IconArt_v1_test')
         imdb.set_force_dont_use_07_metric(dont_use_07_metric)
@@ -489,7 +497,7 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
         pickle.dump(name_milsvm, f)
     
     # Detection evaluation
-    if database in ['watercolor','clipart','PeopleArt','IconArt_v1']:
+    if database in ['watercolor','clipart','PeopleArt','IconArt_v1','comic','CASPApaintings']:
         det_file = os.path.join(cachefilefolder, 'detections_aux.pkl')
         with open(det_file, 'wb') as f:
             pickle.dump(all_boxes, f, pickle.HIGHEST_PROTOCOL)
@@ -662,13 +670,13 @@ def tfR_evaluation_parall(database,num_classes,
                     for k in range(len(labels)):
                         if index_im > number_im:
                             continue
-                        if database in ['IconArt_v1','clipart','watercolor','PeopleArt']:
+                        if database in ['IconArt_v1','clipart','watercolor','PeopleArt','comic','CASPApaintings']:
                             name_img = str(name_imgs[k].decode("utf-8") )
                         else:
                             name_img = name_imgs[k]
                         rois = roiss[k,:]
                         #if verbose: print(name_img)
-                        if database in ['IconArt_v1','clipart','watercolor','PeopleArt']:
+                        if database in ['IconArt_v1','clipart','watercolor','PeopleArt','comic','CASPApaintings']:
                             complet_name = os.path.join(path_to_img, name_img + '.jpg')
                             name_sans_ext = name_img
                         else:
@@ -776,7 +784,7 @@ def tfR_evaluation_parall(database,num_classes,
                 predict_label_all_test +=  [get_RegionsScore] # For the classification task
               
                 for k in range(len(labels)):
-                    if database in ['IconArt_v1','watercolor','clipart','PeopleArt']:
+                    if database in ['IconArt_v1','watercolor','clipart','PeopleArt','comic','CASPApaintings']:
                         complet_name = os.path.join(path_to_img,str(name_imgs[k].decode("utf-8")) + '.jpg')
                     else:
                         complet_name = os.path.join(path_to_img,name_imgs[k] + '.jpg')
@@ -804,7 +812,7 @@ def tfR_evaluation_parall(database,num_classes,
                     i+=1
     
                 for l in range(len(name_imgs)): 
-                    if database in ['IconArt_v1','watercolor','clipart','PeopleArt']:
+                    if database in ['IconArt_v1','watercolor','clipart','PeopleArt','comic','CASPApaintings']:
                         name_all_test += [[str(name_imgs[l].decode("utf-8"))]]
                     else:
                         name_all_test += [[name_imgs[l]]]
@@ -818,12 +826,12 @@ def tfR_evaluation_parall(database,num_classes,
                     for k in range(len(labels)):   
                         if ii > number_im:
                             continue
-                        if  database in ['IconArt_v1','watercolor','clipart','PeopleArt']:
+                        if  database in ['IconArt_v1','watercolor','clipart','PeopleArt','comic','CASPApaintings']:
                             name_img = str(name_imgs[k].decode("utf-8") )
                         else:
                             name_img = name_imgs[k]
                         rois = roiss[k,:]
-                        if database in ['IconArt_v1','watercolor','clipart','PeopleArt']:
+                        if database in ['IconArt_v1','watercolor','clipart','PeopleArt','comic','CASPApaintings']:
                             complet_name = os.path.join(path_to_img,name_img + '.jpg')
                             name_sans_ext = name_img
                         elif(database=='Wikidata_Paintings') or (database=='Wikidata_Paintings_miniset_verif'):
