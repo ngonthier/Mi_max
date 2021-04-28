@@ -1,7 +1,7 @@
 # MI_max : Multi Instance Perceptron for weakly supervised transfer learning of deep detector - [Weakly Supervised Object Detection in Artworks](https://arxiv.org/abs/1810.02569)
 
 By [Gonhier Nicolas](https://perso.telecom-paristech.fr/gonthier/), [Gousseau Yann](https://perso.telecom-paristech.fr/gousseau/), [Ladjal Saïd](https://perso.telecom-paristech.fr/ladjal/) and [Bonfait Olivier](http://tristan.u-bourgogne.fr/CGC/chercheurs/Bonfait/Olivier_Bonfait.html).
-**This is a Tensorflow implementation of our Mi_max model and variants (Polyhedral model).**
+**This is a Tensorflow implementation of our Mi_max model and variant (Polyhedral model).**
 
 **This code can be used to reproduce results on [IconArt](https://wsoda.telecom-paristech.fr/downloads/dataset/), [Watercolor2k, Clipart1k, Comic2k](https://github.com/naoto0804/cross-domain-detection), [CASPApaintings](https://people.cs.pitt.edu/~chris/artistic_objects/) and [PeopleArt](https://github.com/BathVisArtData/PeopleArt) datasets **
 
