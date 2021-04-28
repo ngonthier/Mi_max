@@ -3,7 +3,7 @@
 """
 Created on Sun Feb  4 09:47:54 2018
 
-@author: said ladjal and gonthier
+@author: said ladjal and gonthier nicolas
 """
 
 import tensorflow as tf
