@@ -471,8 +471,6 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
                ,PlotRegions=PlotRegions,cachefile_model_base=cachefile_model_base,number_im=np.inf,dim_rois=dim_rois,
                usecache=usecache_eval,k_per_bag=k_per_bag,num_features=num_features)
     
-    print(name_all_test)
-    input('debug')
     for j,classe in enumerate(classes):
         AP = average_precision_score(true_label_all_test[:,j],predict_label_all_test[:,j],average=None)
         print("MI_Max version Average Precision for",classes[j]," = ",AP)
@@ -510,7 +508,7 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
                 name_img_wt_ext = name_img.split('/')[-1]
                 name_img_wt_ext =name_img_wt_ext.split('.')[0]
             name_img_ind = np.where(np.array(name_all_test)==name_img_wt_ext)[0]
-            print(name_img_ind)
+
             if len(name_img_ind)==0:
                 print('len(name_img_ind), images not found in the all_boxes')
                 print(name_img_wt_ext)
