@@ -52,7 +52,7 @@ class tf_MI_max():
                   num_rois=300,num_classes=10,loss_type='',
                   is_betweenMinus1and1=False,CV_Mode=None,num_split=2,with_scores=False,
                   epsilon=0.0,usecache=True,normalizeW=False,
-                  Polyhedral=False,AddOneLayer=False): 
+                  Polyhedral=False): 
         """
         @param LR : Learning rate : pas de gradient de descente [default: 0.01]
         @param C : the loss/regularization tradeoff constant [default: 1.0]
@@ -94,7 +94,6 @@ class tf_MI_max():
         @param : Polyhedral use the max of the max of product and keep all the (W,b) learnt
             in order to have a polyhedral model
             (default False)
-        @param : AddOneLayer : Model with one Hidden Layer 
         """
         self.LR = LR
         self.C = C
@@ -128,7 +127,6 @@ class tf_MI_max():
         self.usecache = usecache
         self.normalizeW = normalizeW
         self.Polyhedral = Polyhedral
-        self.AddOneLayer = AddOneLayer
         
     def parser(self,record):
 
@@ -251,16 +249,14 @@ class tf_MI_max():
         
     def fit_MI_max_tfrecords(self,data_path,C_Searching=False,shuffle=True):
         """" 
-        This function run per batch on the tfrecords data folder
+        This function run per batch on the tfrecords data folder the training 
+        of the MIMax model of the Polyhedral MIMAX
         @param : data_path : 
         @param : choose of the class to run the optimisation on, if == -1 , then 
         run all the class at once
         @param : shuffle or not the dataset 
         """
-        
-#        if self.AddOneLayer and self.Polyhedral: # Need to AddOneLayer by HL  
-#             print("Polyhdral  and AddOneLayer together not implemented.")
-#             raise(NotImplementedError)
+
         
         self.C_Searching= C_Searching
 
@@ -385,10 +381,6 @@ class tf_MI_max():
             if self.verbose: print('With score multiplication')
             Prod=tf.multiply(Prod,tf.add(scores_,self.epsilon))
 
-#        if self.AddOneLayer: # Model with one hidden layer
-#            Max=tf.reduce_max(Prod,axis=1) 
-#            Max = tf.transpose(Max,perm=[1,0])
-        #else:
         Max=tf.reduce_max(Prod,axis=-1) 
             
         if self.Polyhedral:
@@ -431,20 +423,13 @@ class tf_MI_max():
                 
             loss= tf.add(Tan,tf.multiply(self.C,W_r_reduce))
             
-#            if self.AddOneLayer:
-#                loss = tf.add(loss,tf.multiply(self.C,tf.reduce_sum(tf.pow(W0,2),axis=[-2,-1])))
-                        
         #Definition on batch
         Prod_batch = tf.einsum('ak,ijk->aij',W_r,X_batch)
         Prod_batch=tf.add(Prod_batch,b)
            
         if self.with_scores: 
             Prod_batch=tf.multiply(Prod_batch,tf.add(scores_batch,self.epsilon))
-#           
-#        if self.AddOneLayer: # Case Hidden Layer
-#                    Max_batch=tf.reduce_max(Prod_batch,axis=1) # We take the max because we have at least one element of the bag that is positive
-#                    Max_batch = tf.transpose(Max_batch,perm=[1,0]) # Shape = num_classes, batch size
-        # else
+
         Max_batch=tf.reduce_max(Prod_batch,axis=-1)# Case normal
             
         if self.Polyhedral: # Case Polyhderal 
@@ -553,9 +538,6 @@ class tf_MI_max():
         if not(self.Polyhedral) and self.restarts>0:
             W_tmp=sess.run(W)
             b_tmp=sess.run(b)
-#            if self.AddOneLayer:
-#                W0_tmp=sess.run(W0)
-#                b0_tmp=sess.run(b0)
             for j in range(self.num_classes):
                 loss_value_j = loss_value[j::self.num_classes]
 #                                print('loss_value_j',loss_value_j)
@@ -609,8 +591,9 @@ class tf_MI_max():
         
         sess.close()
         if self.verbose : print("Return MI_max weights")
-        return(name_model)      
-
+        return(name_model)  
+        
+   
     def get_PositiveRegions(self):
         return(self.PositiveRegions.copy())
      

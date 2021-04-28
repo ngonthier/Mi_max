@@ -250,6 +250,9 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
     @param : TEST_NMS : 0.3 : recouvrement autorise avant le NMS avant l evaluation de detections
     @param : mini_batch_size if None or 0 an automatic adhoc mini batch size is set
     @param : Polyhedral consider the polyhedral model 
+    @param : HL hidden layer model 
+    @param : num_features_hidden = 256 number of hidden units in the hidden layer
+        model
     
     This function output AP for different dataset for the weakly supervised task 
     
@@ -349,6 +352,7 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
         extCV =''
     else:
         raise(NotImplementedError)
+        ext_num_feat = ''
     extCV += '_wr'
 
     if Optimizer=='Adam':
@@ -454,6 +458,7 @@ def run_and_eval_MImax(demonet = 'res152_COCO',database = 'IconArt_v1', ReDo = T
                mini_batch_size=mini_batch_size,num_features=num_features,
                num_classes=num_classes,num_split=num_split,CV_Mode=CV_Mode,with_scores=with_scores,
                epsilon=epsilon,loss_type=loss_type,usecache=usecache,Polyhedral=Polyhedral)
+         # Normal calse MIMax or Polyhedral MImax
          export_dir = classifierMI_max.fit_MI_max_tfrecords(data_path=data_path_train, \
                shuffle=shuffle,C_Searching=C_Searching)  
              
