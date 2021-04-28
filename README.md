@@ -97,7 +97,7 @@ For the MI_max-C model (the dataset is split in 2 and several different values f
   python Run_MImax.py --dataset IconArt_v1 --with_score --CV_Mode CV --C_Searching
   ```
   
-For the Polyhedral MI_max model (from [Multiple instance learning on deep features for weakly supervised object detection with extreme domain shifts](https://arxiv.org/abs/2008.01178)) you can use the following command :
+For the Polyhedral MI_max model (from [Multiple instance learning on deep features for weakly supervised object detection with extreme domain shifts](https://arxiv.org/abs/2008.01178) [Gonthier et al. 2020]) you can use the following command :
   ```Shell
   python Run_MImax.py --dataset IconArt_v1 --with_score --Polyhedral
   ```
