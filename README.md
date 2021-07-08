@@ -9,7 +9,7 @@ By [Gonhier Nicolas](https://perso.telecom-paristech.fr/gonthier/), [Gousseau Ya
 ### Installation
 1. Clone the repository
   ```Shell
-  git clone git@github.com:nicaogr/Mi_max.git
+  git clone git@github.com:ngonthier/Mi_max.git
   ```
 
 2. You need to install all the required python library such as tensorflow, cython, opencv-python, numpy, cython_bbox and easydict. We advice you to create a [conda environnement](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html) or equivalent.
